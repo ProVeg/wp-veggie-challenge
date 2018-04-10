@@ -150,44 +150,124 @@ class Veggie_Challenge_Admin
     public function register_setting()
     {
         add_settings_section(
-            $this->option_name . '_general',
-            __('General', 'veggie-challenge'),
-            array($this, $this->option_name . '_general_cb'),
+            $this->option_name . '_vc_gravity_forms',
+            __('Gravity Forms', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_render'),
             $this->plugin_name
         );
 
         add_settings_field(
-            $this->option_name . '_form_id',
-            __('Form ID', 'veggie-challenge'),
-            array($this, $this->option_name . '_form_id_cb'),
+            $this->option_name . '_gravity_forms_form_id',
+            __('Gravity Form ID', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_id_render'),
             $this->plugin_name,
-            $this->option_name . '_general',
-            array('label_for' => $this->option_name . '_form_id')
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_id')
+        );
+        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_id' );
+
+        add_settings_section(
+            $this->option_name . '_vc_mailchimp',
+            __('Mailchimp', 'veggie-challenge'),
+            array($this, $this->option_name . '_mailchimp_render'),
+            $this->plugin_name
         );
 
-        register_setting( $this->plugin_name, $this->option_name . '_form_id' );
+        add_settings_field(
+            $this->option_name . '_mailchimp_interest_vegan_id',
+            __('Vegan interest group ID', 'veggie-challenge'),
+            array($this, $this->option_name . '_mailchimp_interest_vegan_id_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_mailchimp',
+            array('label_for' => $this->option_name . '_mailchimp_interest_vegan_id')
+        );
+
+        add_settings_field(
+            $this->option_name . '_mailchimp_interest_vegetarian_id',
+            __('Vegetarian interest group ID', 'veggie-challenge'),
+            array($this, $this->option_name . '_mailchimp_interest_vegetarian_id_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_mailchimp',
+            array('label_for' => $this->option_name . '_mailchimp_interest_vegetarian_id')
+        );
+
+        add_settings_field(
+            $this->option_name . '_mailchimp_interest_meatfreedays_id',
+            __('Meat Free Days interest group ID', 'veggie-challenge'),
+            array($this, $this->option_name . '_mailchimp_interest_meatfreedays_id_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_mailchimp',
+            array('label_for' => $this->option_name . '_mailchimp_interest_meatfreedays_id')
+        );
+
+        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_vegan_id' );
+        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_vegetarian_id' );
+        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_meatfreedays_id' );
     }
 
 
     /**
-     * Render the text for the general section
+     * Render the text for the gravity forms section
      *
      * @since  1.0.0
      */
-    public function veggie_challenge_general_cb()
+    public function veggie_challenge_gravity_forms_render()
     {
-        echo '<p>' . __('Please change the settings accordingly.', 'veggie-challenge') . '</p>';
+        echo '<p>' . __('Enter the Gravity Forms form ID of the Veggie Challenge.', 'veggie-challenge') . '</p>';
     }
 
     /**
-     * Render the radio input field for position option
+     * _Render the settings input field
      *
      * @since  1.0.0
      */
-    public function veggie_challenge_form_id_cb()
+    public function veggie_challenge_gravity_forms_form_id_render()
     {
-        $form_id = get_option( $this->option_name . '_form_id' );
-        echo '<input type="text" name="' . $this->option_name . '_form_id' . '" id="' . $this->option_name . '_form_id' . '" value="' . $form_id . '"> ';
+        $form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
+        echo '<input type="text" name="' . $this->option_name . '_gravity_forms_form_id' . '" id="' . $this->option_name . '_gravity_forms_form_id' . '" value="' . $form_id . '"> ';
+    }
+
+    /**
+     * Render the text for the Mailchimp section
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_mailchimp_render()
+    {
+        echo '<p>' . __('Enter the Mailchimp interest group IDs.', 'veggie-challenge') . '</p>';
+    }
+
+    /**
+     * Render the settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_mailchimp_interest_vegan_id_render()
+    {
+        $form_id = get_option( $this->option_name . '_mailchimp_interest_vegan_id' );
+        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_vegan_id' . '" id="' . $this->option_name . '_mailchimp_interest_vegan_id' . '" value="' . $form_id . '"> ';
+    }
+
+    /**
+     * Render the settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_mailchimp_interest_vegetarian_id_render()
+    {
+        $form_id = get_option( $this->option_name . '_mailchimp_interest_vegetarian_id' );
+        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_vegetarian_id' . '" id="' . $this->option_name . '_mailchimp_interest_vegetarian_id' . '" value="' . $form_id . '"> ';
+    }
+
+    /**
+     * Render the settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_mailchimp_interest_meatfreedays_id_render()
+    {
+        $form_id = get_option( $this->option_name . '_mailchimp_interest_meatfreedays_id' );
+        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_meatfreedays_id' . '" id="' . $this->option_name . '_mailchimp_interest_meatfreedays_id' . '" value="' . $form_id . '"> ';
     }
 
 }
