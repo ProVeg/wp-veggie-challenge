@@ -14,8 +14,10 @@ function set_post_content( $entry, $form ) {
     $please_configure = ". Please configure on the VeggieChallenge settings page.";
 
     $veggie_challenge_form_id = intval(get_option('veggie_challenge_gravity_forms_form_id'));
-    if (!($veggie_challenge_form_id > 0)) {
-        $form_error->add( 'veggie_challenge_form_id', __("Veggie Challenge Form Id not set".$please_configure, "veggie_challenge"));
+
+    // check if this is the right form
+    if ($form['id'] !== $veggie_challenge_form_id){
+        return;
     }
 
     $email_address_field_id = intval(get_option('veggie_challenge_gravity_forms_form_email_field'));
@@ -42,25 +44,29 @@ function set_post_content( $entry, $form ) {
     if (!($veggie_challenge_role_id > 0)) {
         $form_error->add( 'veggie_challenge_role_id', __("VeggieChallenge role does not exist. Please reinstall the plugin.", "veggie_challenge"));
     }
-
-    // check if this is the right form
-    if ($form['id'] !== $veggie_challenge_form_id){
-        return;
-    }
     
     $email_address = $entry[$email_address_field_id];
     if (!$email_address) {
         $form_error->add( 'email_address', __("Email address is required", "veggie_challenge"));
+    }
+    if (!filter_var($email_address, FILTER_VALIDATE_EMAIL)) {
+        $form_error->add( 'email_address', __("The supplied email address is not valid", "veggie_challenge"));
     }
 
     $challenge = $entry[$challenge_field_id];
     if (!$challenge) {
         $form_error->add( 'challenge', __("Desired challenge is required", "veggie_challenge"));
     }
+    if (!in_array($challenge, array_keys(Veggie_Challenge::$CHALLENGE_TYPES))) {
+        $form_error->add( 'challenge', __("The supplied challenge is not a valid challenge. Valid challenges are: ", "veggie_challenge") . implode(", ", array_keys(Veggie_Challenge::$CHALLENGE_TYPES)));
+    }
 
     $start_date = $entry[$start_date_field_id];
     if (!$challenge) {
         $form_error->add( 'start_date', __("Start date is required", "veggie_challenge"));
+    }
+    if (strtotime($start_date) === false) {
+        $form_error->add( 'challenge', __("The supplied start date is not a valid date", "veggie_challenge"));
     }
 
     $agree_veggie_challenge_emails = $entry["$agree_veggie_challenge_emails_field_id.1"];
@@ -89,10 +95,10 @@ function set_post_content( $entry, $form ) {
             wp_update_user( array( 'ID' => $user_id, 'role' => 'veggiechallenge' ) );
         }
     
-        update_user_meta( $user_id, 'participates_in_veggiechallenge', '1');
-        update_user_meta( $user_id, 'challenge', $challenge);
-        update_user_meta( $user_id, 'start_date', $start_date);
-        update_user_meta( $user_id, 'agree_veggie_challenge_emails', $agree_veggie_challenge_emails);
+        update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, '1');
+        update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $challenge);
+        update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $start_date);
+        update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, '1');
     }
 }
 add_action( 'gform_after_submission', 'set_post_content', 10, 2 );
