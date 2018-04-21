@@ -13,9 +13,10 @@ function set_post_content( $entry, $form ) {
 
     $veggie_challenge_form_id = intval(get_option('veggie_challenge_gravity_forms_form_id'));
     $veggie_challenge_role_id = get_role('veggiechallenge');
-    $email_address_field_id = 2;
-    $challenge_field_id = 2;
-    $agree_field_id = 6;
+    $email_address_field_id = intval(get_option('veggie_challenge_gravity_forms_form_email_field'));
+    $challenge_field_id = intval(get_option('veggie_challenge_gravity_forms_form_challenge_field'));
+    $agree_veggie_challenge_emails_field_id = intval(get_option('veggie_challenge_gravity_forms_form_agree_veggie_challenge_emails_field'));
+    $start_date_field_id = intval(get_option('veggie_challenge_gravity_forms_form_start_date_field'));
 
     // check if this is the right form
     if ($form['id'] !== $veggie_challenge_form_id){
@@ -24,9 +25,11 @@ function set_post_content( $entry, $form ) {
     
     $email_address = $entry[$email_address_field_id];
     $challenge = $entry[$challenge_field_id];
+    $agree = $entry[$agree_veggie_challenge_emails_field_id];
+    $start_date = $entry[$veggie_challenge_gravity_forms_form_start_date_field];
 
-    $agree = $entry["$agree_field_id.1"];
-    if (!$agree || $agree === __("No") || $agree === __("no")) {
+    $agree_veggie_challenge_emails = $entry["$agree_veggie_challenge_emails_field_id.1"];
+    if (!$agree_veggie_challenge_emails || $agree_veggie_challenge_emailsagree === __("No") || $agree_veggie_challenge_emails === __("no")) {
         $form_error->add( 'agree', __("Agree should not be empty and not equal to 'no'"));
     }
 
@@ -52,6 +55,9 @@ function set_post_content( $entry, $form ) {
         }
     
         update_user_meta( $user_id, 'participates_in_veggiechallenge', '1');
+        update_user_meta( $user_id, 'challenge', $challenge);
+        update_user_meta( $user_id, 'start_date', $start_date);
+        update_user_meta( $user_id, 'agree_veggie_challenge_emails', $agree_veggie_challenge_emails);
     }
 }
 add_action( 'gform_after_submission', 'set_post_content', 10, 2 );
