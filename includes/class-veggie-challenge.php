@@ -29,7 +29,28 @@
  */
 class Veggie_Challenge {
 
-	/**
+    static $USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE = 'veggie_challenge_participates_in_veggiechallenge';
+    static $USER_FIELD_CURRENT_DIET = 'veggie_challenge_current_diet';
+    static $USER_FIELD_CHALLENGE_TYPE = 'veggie_challenge_challenge_type';
+    static $USER_FIELD_START_DATE = 'veggie_challenge_start_date';
+    static $USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS = 'veggie_challenge_agree_veggie_challenge_emails';
+
+    static $DIET_TYPES = Array(
+        'vegan' => 'Vegan',
+        'part_time_vegan' => 'Part time vegan',
+        'vegetarian' => 'Vegetarian',
+        'part_time_vegetarian' => 'Part time vegetarian',
+        'omnivore' => 'Omnivore',
+    );
+    static $CHALLENGE_TYPES = Array(
+        'vegan' => 'Vegan',
+        'vegetarian' => 'Vegetarian',
+        'meat_free_days' => 'Meat Free Days'
+    );
+
+
+
+    /**
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
