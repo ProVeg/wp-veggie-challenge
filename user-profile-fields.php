@@ -68,11 +68,11 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
         </tr>
 
         <tr>
-            <th><label for="start_date">Start date</label></th>
+            <th><label for="<?php echo Veggie_Challenge::$USER_FIELD_START_DATE; ?>">Start date</label></th>
 
             <td>
-                <input type="date" name="start_date" id="start_date" value="<?php echo esc_attr( get_the_author_meta( 'start_date', $user->ID ) ); ?>" class="date" />
-                Saved date: <?php echo esc_attr( get_the_author_meta( 'start_date', $user->ID ) ); ?>
+                <input type="date" name="<?php echo Veggie_Challenge::$USER_FIELD_START_DATE; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_START_DATE; ?>" value="<?php echo esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_START_DATE, $user->ID ) ); ?>" class="date" />
+                Saved date: <?php echo esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_START_DATE, $user->ID ) ); ?>
             </td>
 
         </tr>
@@ -90,6 +90,6 @@ function _vc_save_challenge_profile_fields( $user_id ) {
 
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $_POST[Veggie_Challenge::$USER_FIELD_CURRENT_DIET] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $_POST[Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE] );
-    update_user_meta( $user_id, 'start_date', $_POST['start_date'] );
+    update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $_POST[Veggie_Challenge::$USER_FIELD_START_DATE] );
     update_user_meta( $user_id, 'participates_in_veggiechallenge', $_POST['participates_in_veggiechallenge'] );
 }

@@ -31,6 +31,7 @@ class Veggie_Challenge {
 
     static $USER_FIELD_CURRENT_DIET = 'veggie_challenge_current_diet';
     static $USER_FIELD_CHALLENGE_TYPE = 'veggie_challenge_challenge_type';
+    static $USER_FIELD_START_DATE = 'veggie_challenge_start_date';
 
     static $DIET_TYPES = Array(
         'vegan' => 'Vegan',
