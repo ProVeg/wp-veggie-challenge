@@ -34,6 +34,7 @@ class Veggie_Challenge {
     static $USER_FIELD_CHALLENGE_TYPE = 'veggie_challenge_challenge_type';
     static $USER_FIELD_START_DATE = 'veggie_challenge_start_date';
     static $USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS = 'veggie_challenge_agree_veggie_challenge_emails';
+    static $USER_FIELD_IS_SYNCED_TO_MAILCHIMP = 'veggie_challenge_is_synced_to_mailchimp';
 
     static $DIET_TYPES = Array(
         'vegan' => 'Vegan',

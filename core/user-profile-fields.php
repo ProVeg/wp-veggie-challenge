@@ -92,6 +92,21 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
             </td>
         </tr>
 
+        <tr>
+            <th><label><?php echo __("Is synced to MailChimp", 'veggie-challenge') ?></label></th>
+
+            <?php
+            $participates = get_the_author_meta( Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP, $user->ID );
+            ?>
+            <td>
+                <input name="<?php echo Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP; ?>_yes" type="radio" value="1" <?php echo $participates === "1" ? 'checked="checked"' : '' ?>>
+                <label for="<?php echo Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP; ?>_yes"><?php echo __("Yes", 'veggie-challenge') ?></label>
+                <input name="<?php echo Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP; ?>_no" type="radio" value="0" <?php echo $participates === "1" ? '' : 'checked="checked"' ?>>
+                <label for="<?php echo Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP; ?>_no"><?php echo __("No", 'veggie-challenge') ?></label>
+                Saved key: <?php echo esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP, $user->ID ) ); ?>
+            </td>
+        </tr>
+
     </table>
 <?php }
 

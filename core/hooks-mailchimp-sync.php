@@ -1,6 +1,17 @@
 <?php
 
 function veggie_challenge_mailchimp_sync_should_sync_user( $subscribe, $user ) {
+
+    // $is_synced_to_mailchimp = get_user_meta($user->ID, Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP, true);
+    // if ($is_synced_to_mailchimp){
+    //     return true;
+    // }
+
+    $agree_veggie_challenge_emails = get_user_meta($user->ID, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, true);
+    if (!$agree_veggie_challenge_emails){
+        return false;
+    }
+
     $participates = get_user_meta($user->ID, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, true);
     if (!$participates){
         return false;
@@ -11,12 +22,13 @@ function veggie_challenge_mailchimp_sync_should_sync_user( $subscribe, $user ) {
         return false;
     }
 
-    if (strtotime($start_date) <= time()) {
-        return true;
+    if (strtotime($start_date) > time()) {
+        return false;
     }
+    
+    update_user_meta( $user->ID, Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP, '1');
 
-    // do not subscribe otherwise
-    return false;
+    return true;
 };
 add_filter( 'mailchimp_sync_should_sync_user', 'veggie_challenge_mailchimp_sync_should_sync_user', 10, 2 ); 
 
