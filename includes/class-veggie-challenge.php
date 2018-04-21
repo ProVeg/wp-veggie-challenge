@@ -29,12 +29,23 @@
  */
 class Veggie_Challenge {
 
+    static $USER_FIELD_CURRENT_DIET = 'veggie_challenge_current_diet';
     static $USER_FIELD_CHALLENGE_TYPE = 'veggie_challenge_challenge_type';
+
+    static $DIET_TYPES = Array(
+        'vegan' => 'Vegan',
+        'part_time_vegan' => 'Part time vegan',
+        'vegetarian' => 'Vegetarian',
+        'part_time_vegetarian' => 'Part time vegetarian',
+        'omnivore' => 'Omnivore',
+    );
     static $CHALLENGE_TYPES = Array(
         'vegan' => 'Vegan',
         'vegetarian' => 'Vegetarian',
         'meat_free_days' => 'Meat Free Days'
     );
+
+
 
     /**
 	 * The loader that's responsible for maintaining and registering all hooks that power

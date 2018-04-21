@@ -26,21 +26,23 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
         </tr>
 
         <tr>
-            <th><label for="current_diet">Current diet</label></th>
+            <th><label for="<?php echo Veggie_Challenge::$USER_FIELD_CURRENT_DIET; ?>">Current diet</label></th>
 
             <?php
-            $selected = esc_attr( get_the_author_meta( 'current_diet', $user->ID ) );
+            $selected = esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $user->ID ) );
             ?>
             <td>
-                <select name="current_diet" id="current_diet">
+                <select name="<?php echo Veggie_Challenge::$USER_FIELD_CURRENT_DIET; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_CURRENT_DIET; ?>">
                     <option value=""></option>
-                    <option value="vegan" <?php if ($selected == 'vegan' ) { echo 'selected'; } ?>>Vegan</option>
-                    <option value="flexanist" <?php if ($selected == 'flexanist' ) { echo 'selected'; } ?>>Flexanist</option>
-                    <option value="vegetarian" <?php if ($selected == 'vegetarian' ) { echo 'selected'; } ?>>Vegetarian</option>
-                    <option value="flexitarian" <?php if ($selected == 'flexitarian' ) { echo 'selected'; } ?>>Flexitarian</option>
-                    <option value="omnivore" <?php if ($selected == 'omnivore' ) { echo 'selected'; } ?>>Omnivore</option>
+                    <?php
+                    foreach (Veggie_Challenge::$DIET_TYPES as $key => $label):
+                        echo '<option value="'.$key.'"';
+                        if ($selected == $key ) { echo 'selected="selected"'; }
+                        echo '>'.$label.'</option>';
+                    endforeach;
+                    ?>
                 </select>
-                Saved key: <?php echo esc_attr( get_the_author_meta( 'current_diet', $user->ID ) ); ?>
+                Saved key: <?php echo esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $user->ID ) ); ?>
             </td>
         </tr>
 
@@ -86,7 +88,7 @@ function _vc_save_challenge_profile_fields( $user_id ) {
     if ( !current_user_can( 'edit_user', $user_id ) )
         return false;
 
-    update_user_meta( $user_id, 'current_diet', $_POST['current_diet'] );
+    update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $_POST[Veggie_Challenge::$USER_FIELD_CURRENT_DIET] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $_POST[Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE] );
     update_user_meta( $user_id, 'start_date', $_POST['start_date'] );
     update_user_meta( $user_id, 'participates_in_veggiechallenge', $_POST['participates_in_veggiechallenge'] );
