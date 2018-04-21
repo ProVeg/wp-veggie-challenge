@@ -149,6 +149,32 @@ class Veggie_Challenge_Admin
      */
     public function register_setting()
     {
+        if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
+            $this->register_gravity_forms_settings();
+        } else {
+            add_settings_section(
+                $this->option_name . '_vc_gravity_forms',
+                __('Gravity Forms', 'veggie-challenge'),
+                array($this, $this->option_name . '_gravity_forms_not_activated_render'),
+                $this->plugin_name
+            );
+        }
+
+        if ( is_plugin_active( 'mailchimp-for-wp/mailchimp-for-wp.php' ) ) {
+            $this->register_mailchimp_settings();
+        } else {
+            add_settings_section(
+                $this->option_name . '_vc_mailchimp',
+                __('Mailchimp', 'veggie-challenge'),
+                array($this, $this->option_name . '_mailchimp_not_activated_render'),
+                $this->plugin_name
+            );
+        }
+
+    }
+
+    private function register_gravity_forms_settings()
+    {
         add_settings_section(
             $this->option_name . '_vc_gravity_forms',
             __('Gravity Forms', 'veggie-challenge'),
@@ -164,8 +190,51 @@ class Veggie_Challenge_Admin
             $this->option_name . '_vc_gravity_forms',
             array('label_for' => $this->option_name . '_gravity_forms_form_id')
         );
-        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_id' );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_id');
 
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_email_field',
+            __('Email field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_email_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_email_field')
+        );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_email_field');
+
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_challenge_field',
+            __('Challenge type field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_challenge_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_challenge_field')
+        );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_challenge_field');
+
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_start_date_field',
+            __('Start date field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_start_date_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_start_date_field')
+        );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_start_date_field');
+
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field',
+            __('Agree Veggie Challenge Emails field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field')
+        );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field');
+    }
+
+    private function register_mailchimp_settings()
+    {
         add_settings_section(
             $this->option_name . '_vc_mailchimp',
             __('Mailchimp', 'veggie-challenge'),
@@ -200,11 +269,10 @@ class Veggie_Challenge_Admin
             array('label_for' => $this->option_name . '_mailchimp_interest_meatfreedays_id')
         );
 
-        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_vegan_id' );
-        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_vegetarian_id' );
-        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_meatfreedays_id' );
+        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_vegan_id');
+        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_vegetarian_id');
+        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_meatfreedays_id');
     }
-
 
     /**
      * Render the text for the gravity forms section
@@ -217,7 +285,17 @@ class Veggie_Challenge_Admin
     }
 
     /**
-     * _Render the settings input field
+     * Render the text for the gravity forms section if the plugin is not activated
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_not_activated_render()
+    {
+        echo '<p>' . __('Gravity forms is not installed and/or activated on this website. Visit the plugin page and install Gravity Forms to continue.', 'veggie-challenge') . '</p>';
+    }
+
+    /**
+     * _Render the form id settings input field
      *
      * @since  1.0.0
      */
@@ -225,7 +303,7 @@ class Veggie_Challenge_Admin
     {
         $form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
 
-        $select = '<select name="' . $this->option_name . '_gravity_forms_form_id' . '" id="' . $this->option_name . '_gravity_forms_form_id' . '" >';
+        $select = '<select name="' . $this->option_name . '_gravity_forms_form_id' . '" id="' . $this->option_name . '_gravity_forms_form_id' . '">';
         $forms = RGFormsModel::get_forms( null, 'title' );
         $select .= '<option value="" id="0">'.__('Choose form', 'veggie-challenge'). '</option>';
         foreach( $forms as $form ):
@@ -241,6 +319,73 @@ class Veggie_Challenge_Admin
     }
 
     /**
+     * _Render the form email field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_email_field_render()
+    {
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_email_field');
+    }
+
+    /**
+     * _Render the form challenge field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_challenge_field_render()
+    {
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_challenge_field');
+    }
+
+    /**
+     * _Render the form challenge field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_start_date_field_render()
+    {
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_start_date_field');
+    }
+
+    /**
+     * _Render the form challenge field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_agree_veggie_challenge_emails_field_render()
+    {
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_agree_veggie_challenge_emails_field');
+    }
+
+    private function buildFormFieldSelectHtml($option_name) {
+        $current_form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
+        if ($current_form_id == '') {
+            return __('Select a form above and save changes to select form fields', 'veggie-challenge');;
+        }
+
+        $current_form_field_id = get_option( $this->option_name . '' . $option_name . '');
+        $form_meta = RGFormsModel::get_form_meta( $current_form_id );
+
+        $select = '<select name="' . $this->option_name . $option_name . '" id="' . $this->option_name . $option_name . '" >';
+        $select .= '<option value="" id="0">'.__('Choose field', 'veggie-challenge'). '</option>';
+        foreach( $form_meta as $fields ):
+            foreach( $fields as $field ):
+                if ($field->type != '') {
+                    $select .= '<option value="'. $field->id . '" id="' . $field->id . '"';
+                    if($current_form_field_id == $field->id) $select .= ' selected="selected"';
+                    $select .= '>' . $field->label . '</option>';
+                }
+            endforeach;
+        endforeach;
+        $select .= '</select>';
+
+        if ($current_form_field_id != '') $select .= ' current id: ' . $current_form_field_id;
+
+        return $select;
+    }
+
+    /**
      * Render the text for the Mailchimp section
      *
      * @since  1.0.0
@@ -248,6 +393,17 @@ class Veggie_Challenge_Admin
     public function veggie_challenge_mailchimp_render()
     {
         echo '<p>' . __('Enter the Mailchimp interest group IDs.', 'veggie-challenge') . '</p>';
+    }
+
+
+    /**
+     * Render the text for the mailchimp section if the plugin is not activated
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_mailchimp_not_activated_render()
+    {
+        echo '<p>' . __('The plugin \'Mailchimp for Wordpress\' is not installed and/or activated on this website. Visit the plugin page and install \'Mailchimp for Wordpress\' to continue.', 'veggie-challenge') . '</p>';
     }
 
     /**
