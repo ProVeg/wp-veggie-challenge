@@ -11,12 +11,37 @@
 function set_post_content( $entry, $form ) {
     $form_error = new WP_Error();
 
+    $please_configure = ". Please configure on the VeggieChallenge settings page.";
+
     $veggie_challenge_form_id = intval(get_option('veggie_challenge_gravity_forms_form_id'));
-    $veggie_challenge_role_id = get_role('veggiechallenge');
+    if (!($veggie_challenge_form_id > 0)) {
+        $form_error->add( 'veggie_challenge_form_id', __("Veggie Challenge Form Id not set".$please_configure, "veggie_challenge"));
+    }
+
     $email_address_field_id = intval(get_option('veggie_challenge_gravity_forms_form_email_field'));
+    if (!($email_address_field_id > 0)) {
+        $form_error->add( 'email_address_field_id', __("Email Address Field Id not set".$please_configure, "veggie_challenge"));
+    }
+
     $challenge_field_id = intval(get_option('veggie_challenge_gravity_forms_form_challenge_field'));
+    if (!($challenge_field_id > 0)) {
+        $form_error->add( 'challenge_field_id', __("Challenge Field Id not set".$please_configure, "veggie_challenge"));
+    }
+
     $agree_veggie_challenge_emails_field_id = intval(get_option('veggie_challenge_gravity_forms_form_agree_veggie_challenge_emails_field'));
+    if (!($agree_veggie_challenge_emails_field_id > 0)) {
+        $form_error->add( 'agree_veggie_challenge_emails_field_id', __("Agree Veggie Challenge Emails Field Id not set.$please_configure", "veggie_challenge"));
+    }
+
     $start_date_field_id = intval(get_option('veggie_challenge_gravity_forms_form_start_date_field'));
+    if (!($start_date_field_id > 0)) {
+        $form_error->add( 'start_date_field_id', __("Start Date Field Id not set.$please_configure", "veggie_challenge"));
+    }
+
+    $veggie_challenge_role_id = get_role('veggiechallenge');
+    if (!($veggie_challenge_role_id > 0)) {
+        $form_error->add( 'veggie_challenge_role_id', __("VeggieChallenge role does not exist. Please reinstall the plugin.", "veggie_challenge"));
+    }
 
     // check if this is the right form
     if ($form['id'] !== $veggie_challenge_form_id){
@@ -24,25 +49,35 @@ function set_post_content( $entry, $form ) {
     }
     
     $email_address = $entry[$email_address_field_id];
+    if (!$email_address) {
+        $form_error->add( 'email_address', __("Email address is required", "veggie_challenge"));
+    }
+
     $challenge = $entry[$challenge_field_id];
-    $agree = $entry[$agree_veggie_challenge_emails_field_id];
-    $start_date = $entry[$veggie_challenge_gravity_forms_form_start_date_field];
+    if (!$challenge) {
+        $form_error->add( 'challenge', __("Desired challenge is required", "veggie_challenge"));
+    }
+
+    $start_date = $entry[$start_date_field_id];
+    if (!$challenge) {
+        $form_error->add( 'start_date', __("Start date is required", "veggie_challenge"));
+    }
 
     $agree_veggie_challenge_emails = $entry["$agree_veggie_challenge_emails_field_id.1"];
-    if (!$agree_veggie_challenge_emails || $agree_veggie_challenge_emailsagree === __("No") || $agree_veggie_challenge_emails === __("no")) {
-        $form_error->add( 'agree', __("Agree should not be empty and not equal to 'no'"));
+    if (!$agree_veggie_challenge_emails) {
+        $form_error->add( 'agree', __("It is required to agree to receiving VeggieChallenge emails", "veggie_challenge"));
     }
 
     if ( is_wp_error( $form_error ) ) {
         foreach ( $form_error->get_error_messages() as $error ) {
             echo '<div>';
-            echo '<strong>' . __("ERROR") . ':</strong>:';
+            echo '<strong>' . __("ERROR", "veggie_challenge") . ':</strong>:';
             echo $error . '<br/>';
             echo '</div>';
         }
     }
 
-    if ($form_error->get_error_messages() === 0) {
+    if (count($form_error->get_error_messages()) === 0) {
 
         // check if the user exists
         $user_id = username_exists( $email_address );
