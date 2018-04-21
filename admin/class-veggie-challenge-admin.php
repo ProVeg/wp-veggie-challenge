@@ -149,6 +149,22 @@ class Veggie_Challenge_Admin
      */
     public function register_setting()
     {
+        if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
+            $this->register_gravity_forms_settings();
+        } else {
+            add_settings_section(
+                $this->option_name . '_vc_gravity_forms',
+                __('Gravity Forms', 'veggie-challenge'),
+                array($this, $this->option_name . '_gravity_forms_not_activated_render'),
+                $this->plugin_name
+            );
+        }
+
+        $this->register_mailchimp_settings();
+    }
+
+    private function register_gravity_forms_settings()
+    {
         add_settings_section(
             $this->option_name . '_vc_gravity_forms',
             __('Gravity Forms', 'veggie-challenge'),
@@ -164,7 +180,7 @@ class Veggie_Challenge_Admin
             $this->option_name . '_vc_gravity_forms',
             array('label_for' => $this->option_name . '_gravity_forms_form_id')
         );
-        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_id' );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_id');
 
         add_settings_field(
             $this->option_name . '_gravity_forms_form_email_field',
@@ -174,7 +190,7 @@ class Veggie_Challenge_Admin
             $this->option_name . '_vc_gravity_forms',
             array('label_for' => $this->option_name . '_gravity_forms_form_email_field')
         );
-        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_email_field' );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_email_field');
 
         add_settings_field(
             $this->option_name . '_gravity_forms_form_challenge_field',
@@ -184,7 +200,7 @@ class Veggie_Challenge_Admin
             $this->option_name . '_vc_gravity_forms',
             array('label_for' => $this->option_name . '_gravity_forms_form_challenge_field')
         );
-        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_challenge_field' );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_challenge_field');
 
         add_settings_field(
             $this->option_name . '_gravity_forms_form_start_date_field',
@@ -194,7 +210,7 @@ class Veggie_Challenge_Admin
             $this->option_name . '_vc_gravity_forms',
             array('label_for' => $this->option_name . '_gravity_forms_form_start_date_field')
         );
-        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_start_date_field' );
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_start_date_field');
 
         add_settings_field(
             $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field',
@@ -204,8 +220,11 @@ class Veggie_Challenge_Admin
             $this->option_name . '_vc_gravity_forms',
             array('label_for' => $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field')
         );
-        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field' );
-        
+        register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field');
+    }
+
+    private function register_mailchimp_settings()
+    {
         add_settings_section(
             $this->option_name . '_vc_mailchimp',
             __('Mailchimp', 'veggie-challenge'),
@@ -240,11 +259,10 @@ class Veggie_Challenge_Admin
             array('label_for' => $this->option_name . '_mailchimp_interest_meatfreedays_id')
         );
 
-        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_vegan_id' );
-        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_vegetarian_id' );
-        register_setting( $this->plugin_name, $this->option_name . '_mailchimp_interest_meatfreedays_id' );
+        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_vegan_id');
+        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_vegetarian_id');
+        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_meatfreedays_id');
     }
-
 
     /**
      * Render the text for the gravity forms section
@@ -254,6 +272,16 @@ class Veggie_Challenge_Admin
     public function veggie_challenge_gravity_forms_render()
     {
         echo '<p>' . __('Enter the Gravity Forms form ID of the Veggie Challenge.', 'veggie-challenge') . '</p>';
+    }
+
+    /**
+     * Render the text for the gravity forms section if the plugin is not activated
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_not_activated_render()
+    {
+        echo '<p>' . __('Gravity forms is not installed and/or activated on this website. Visit the plugin page and install Gravity Forms to continue.', 'veggie-challenge') . '</p>';
     }
 
     /**
