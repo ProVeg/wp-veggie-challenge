@@ -80,3 +80,5 @@ function run_veggie_challenge() {
 
 }
 run_veggie_challenge();
+
+require 'hooks.php';
