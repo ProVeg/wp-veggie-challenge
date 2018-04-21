@@ -160,7 +160,17 @@ class Veggie_Challenge_Admin
             );
         }
 
-        $this->register_mailchimp_settings();
+        if ( is_plugin_active( 'mailchimp-for-wp/mailchimp-for-wp.php' ) ) {
+            $this->register_mailchimp_settings();
+        } else {
+            add_settings_section(
+                $this->option_name . '_vc_mailchimp',
+                __('Mailchimp', 'veggie-challenge'),
+                array($this, $this->option_name . '_mailchimp_not_activated_render'),
+                $this->plugin_name
+            );
+        }
+
     }
 
     private function register_gravity_forms_settings()
@@ -383,6 +393,17 @@ class Veggie_Challenge_Admin
     public function veggie_challenge_mailchimp_render()
     {
         echo '<p>' . __('Enter the Mailchimp interest group IDs.', 'veggie-challenge') . '</p>';
+    }
+
+
+    /**
+     * Render the text for the mailchimp section if the plugin is not activated
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_mailchimp_not_activated_render()
+    {
+        echo '<p>' . __('The plugin \'Mailchimp for Wordpress\' is not installed and/or activated on this website. Visit the plugin page and install \'Mailchimp for Wordpress\' to continue.', 'veggie-challenge') . '</p>';
     }
 
     /**
