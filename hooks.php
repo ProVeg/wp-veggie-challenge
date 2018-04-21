@@ -102,18 +102,3 @@ function set_post_content( $entry, $form ) {
     }
 }
 add_action( 'gform_after_submission', 'set_post_content', 10, 2 );
-
-add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
-
-    $start_date = get_user_meta($user->ID, 'start_date', true);
-    if (!$start_date){
-        return false;
-    }
-
-    if (strtotime($start_date) <= time()) {
-        return true;
-    }
-
-    // do not subscribe otherwise
-    return false;
-});

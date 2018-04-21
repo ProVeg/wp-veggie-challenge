@@ -82,6 +82,7 @@ function run_veggie_challenge() {
 run_veggie_challenge();
 
 require 'hooks.php';
+require 'hooks-mailchimp-sync.php';
 require 'user-profile-fields.php';
 
 ?>
