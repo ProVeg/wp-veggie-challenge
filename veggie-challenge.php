@@ -142,6 +142,8 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
     </table>
 <?php }
 
+require 'hooks.php';
+
 add_action( 'personal_options_update', '_vc_save_challenge_profile_fields' );
 add_action( 'edit_user_profile_update', '_vc_save_challenge_profile_fields' );
 
