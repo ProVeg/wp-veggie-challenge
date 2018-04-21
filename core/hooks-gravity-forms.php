@@ -66,7 +66,7 @@ function set_post_content( $entry, $form ) {
         $form_error->add( 'start_date', __("Start date is required", "veggie_challenge"));
     }
     if (strtotime($start_date) === false) {
-        $form_error->add( 'challenge', __("The supplied start date is not a valid date", "veggie_challenge"));
+        $form_error->add( 'start_date', __("The supplied start date is not a valid date", "veggie_challenge"));
     }
 
     $agree_veggie_challenge_emails = $entry["$agree_veggie_challenge_emails_field_id.1"];
@@ -102,18 +102,3 @@ function set_post_content( $entry, $form ) {
     }
 }
 add_action( 'gform_after_submission', 'set_post_content', 10, 2 );
-
-add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
-
-    $start_date = get_user_meta($user->ID, 'start_date', true);
-    if (!$start_date){
-        return false;
-    }
-
-    if (strtotime($start_date) <= time()) {
-        return true;
-    }
-
-    // do not subscribe otherwise
-    return false;
-});
