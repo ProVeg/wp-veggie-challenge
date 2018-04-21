@@ -369,14 +369,12 @@ class Veggie_Challenge_Admin
 
         $select = '<select name="' . $this->option_name . $option_name . '" id="' . $this->option_name . $option_name . '" >';
         $select .= '<option value="" id="0">'.__('Choose field', 'veggie-challenge'). '</option>';
-        foreach( $form_meta as $fields ):
-            foreach( $fields as $field ):
-                if ($field->type != '') {
-                    $select .= '<option value="'. $field->id . '" id="' . $field->id . '"';
-                    if($current_form_field_id == $field->id) $select .= ' selected="selected"';
-                    $select .= '>' . $field->label . '</option>';
-                }
-            endforeach;
+        foreach( $form_meta['fields'] as $field ):
+            if ($field->type != '') {
+                $select .= '<option value="'. $field->id . '" id="' . $field->id . '"';
+                if($current_form_field_id == $field->id) $select .= ' selected="selected"';
+                $select .= '>' . $field->label . '</option>';
+            }
         endforeach;
         $select .= '</select>';
 
