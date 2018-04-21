@@ -6,22 +6,22 @@ add_action( 'edit_user_profile', '_vc_show_challenge_profile_fields' );
 
 function _vc_show_challenge_profile_fields( $user ) { ?>
 
-    <h3><?php echo __("VeggieChallenge Fields") ?></h3>
+    <h3><?php echo __("VeggieChallenge Fields", 'veggie-challenge') ?></h3>
 
     <table class="form-table">
 
         <tr>
-            <th><label><?php echo __("Participates") ?></label></th>
+            <th><label><?php echo __("Participates", 'veggie-challenge') ?></label></th>
 
             <?php
-            $participates = get_the_author_meta( 'participates_in_veggiechallenge', $user->ID );
+            $participates = get_the_author_meta( Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, $user->ID );
             ?>
             <td>
-                <input name="participates_in_veggiechallenge" id="participates_in_veggiechallenge_yes" type="radio" value="1" <?php echo $participates === "1" ? 'checked="checked"' : '' ?>>
-                <label for="participates_in_veggiechallenge_yes"><?php echo __("Yes") ?></label>
-                <input name="participates_in_veggiechallenge" id="participates_in_veggiechallenge_no" type="radio" value="0" <?php echo $participates === "1" ? '' : 'checked="checked"' ?>>
-                <label for="participates_in_veggiechallenge_no"><?php echo __("No") ?></label>
-                Saved key: <?php echo esc_attr( get_the_author_meta( 'participates_in_veggiechallenge', $user->ID ) ); ?>
+                <input name="<?php echo Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE; ?>_yes" type="radio" value="1" <?php echo $participates === "1" ? 'checked="checked"' : '' ?>>
+                <label for="<?php echo Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE; ?>_yes"><?php echo __("Yes", 'veggie-challenge') ?></label>
+                <input name="<?php echo Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE; ?>_no" type="radio" value="0" <?php echo $participates === "1" ? '' : 'checked="checked"' ?>>
+                <label for="<?php echo Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE; ?>_no"><?php echo __("No", 'veggie-challenge') ?></label>
+                Saved key: <?php echo esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, $user->ID ) ); ?>
             </td>
         </tr>
 
@@ -81,13 +81,13 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
             <th><label><?php echo __("Agreed on VeggieChallenge emails", 'veggie-challenge') ?></label></th>
 
             <?php
-            $participates = get_the_author_meta( Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, $user->ID );
+            $agreed = get_the_author_meta( Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, $user->ID );
             ?>
             <td>
-                <input name="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_yes" type="radio" value="1" <?php echo $participates === "1" ? 'checked="checked"' : '' ?>>
-                <label for="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_yes"><?php echo __("Yes") ?></label>
-                <input name="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_no" type="radio" value="0" <?php echo $participates === "1" ? '' : 'checked="checked"' ?>>
-                <label for="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_no"><?php echo __("No") ?></label>
+                <input name="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_yes" type="radio" value="1" <?php echo $agreed === "1" ? 'checked="checked"' : '' ?>>
+                <label for="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_yes"><?php echo __("Yes", 'veggie-challenge') ?></label>
+                <input name="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_no" type="radio" value="0" <?php echo $agreed === "1" ? '' : 'checked="checked"' ?>>
+                <label for="<?php echo Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS; ?>_no"><?php echo __("No", 'veggie-challenge') ?></label>
                 Saved key: <?php echo esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, $user->ID ) ); ?>
             </td>
         </tr>
@@ -103,7 +103,7 @@ function _vc_save_challenge_profile_fields( $user_id ) {
     if ( !current_user_can( 'edit_user', $user_id ) )
         return false;
 
-    update_user_meta( $user_id, 'participates_in_veggiechallenge', $_POST['participates_in_veggiechallenge'] );
+    update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, $_POST[Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $_POST[Veggie_Challenge::$USER_FIELD_CURRENT_DIET] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $_POST[Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $_POST[Veggie_Challenge::$USER_FIELD_START_DATE] );
