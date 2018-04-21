@@ -10,7 +10,7 @@
  */
 function set_post_content( $entry, $form ) {
     $veggie_challenge_form_id = intval(get_option('veggie_challenge_gravity_forms_form_id'));
-    $veggie_challenge_role_id = get_role('VeggieChallenge Subcriber');
+    $veggie_challenge_role_id = get_role('veggiechallenge');
 
     // check if this is the right form
     if ($form['id'] !== $veggie_challenge_form_id){
@@ -24,10 +24,11 @@ function set_post_content( $entry, $form ) {
     $user_id = username_exists( $email_address );
 
     // if the user does not exist, create it
-    if (!$user_id and email_exists( $email_address ) == false ) {
+    if (!$user_id && email_exists( $email_address ) == false ) {
         $random_password = wp_generate_password( $length=16, $include_standard_special_chars=false );
         $user_id = wp_create_user( $email_address, $random_password, $email_address );
-        wp_update_user( array( 'role' => $veggie_challenge_role_id ) );
+        wp_update_user( array( 'ID' => $user_id, 'role' => 'veggiechallenge' ) );
+        //update_user_meta( $user_id, $meta_key, $meta_value, $prev_value );
     }
 
 
