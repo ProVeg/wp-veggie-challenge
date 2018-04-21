@@ -96,7 +96,7 @@ function set_post_content( $entry, $form ) {
         }
     
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, '1');
-        update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $challenge);
+        update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $challenge);
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $start_date);
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, '1');
     }
