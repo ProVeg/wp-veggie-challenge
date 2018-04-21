@@ -224,7 +224,20 @@ class Veggie_Challenge_Admin
     public function veggie_challenge_gravity_forms_form_id_render()
     {
         $form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
-        echo '<input type="text" name="' . $this->option_name . '_gravity_forms_form_id' . '" id="' . $this->option_name . '_gravity_forms_form_id' . '" value="' . $form_id . '"> ';
+
+        $select = '<select name="' . $this->option_name . '_gravity_forms_form_id' . '" id="' . $this->option_name . '_gravity_forms_form_id' . '" >';
+        $forms = RGFormsModel::get_forms( null, 'title' );
+        $select .= '<option value="" id="0">'.__('Choose form', 'veggie-challenge'). '</option>';
+        foreach( $forms as $form ):
+            $select .= '<option value="'. $form->id . '" id="' . $form->id . '"';
+            if($form_id == $form->id) $select .= ' selected="selected"';
+            $select .= '>' . $form->title . '</option>';
+        endforeach;
+        $select .= '</select>';
+
+        echo $select;
+
+        if ($form_id != '') echo ' current form id: ' . $form_id;
     }
 
     /**
