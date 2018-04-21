@@ -38,7 +38,7 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
                     foreach (Veggie_Challenge::$DIET_TYPES as $key => $label):
                         echo '<option value="'.$key.'"';
                         if ($selected == $key ) { echo 'selected="selected"'; }
-                        echo '>'.$label.'</option>';
+                        echo '>'.__($label, 'veggie-challenge').'</option>';
                     endforeach;
                     ?>
                 </select>
@@ -59,7 +59,7 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
                         foreach (Veggie_Challenge::$CHALLENGE_TYPES as $key => $label):
                             echo '<option value="'.$key.'"';
                             if ($selected == $key ) { echo 'selected="selected"'; }
-                            echo '>'.$label.'</option>';
+                            echo '>'.__($label, 'veggie-challenge').'</option>';
                         endforeach;
                     ?>
                 </select>
