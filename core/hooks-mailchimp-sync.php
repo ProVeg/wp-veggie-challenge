@@ -1,5 +1,10 @@
 <?php
-add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
+
+function veggie_challenge_mailchimp_sync_should_sync_user( $subscribe, $user ) {
+    $participates = get_user_meta($user->ID, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, true);
+    if (!$participates){
+        return false;
+    }
 
     $start_date = get_user_meta($user->ID, Veggie_Challenge::$USER_FIELD_START_DATE, true);
     if (!$start_date){
@@ -12,7 +17,8 @@ add_filter( 'mailchimp_sync_should_sync_user', function( $subscribe, $user ) {
 
     // do not subscribe otherwise
     return false;
-});
+};
+add_filter( 'mailchimp_sync_should_sync_user', 'veggie_challenge_mailchimp_sync_should_sync_user', 10, 2 ); 
 
 add_filter( 'mailchimp_sync_subscriber_data', function( $data, $user ) {
 
@@ -20,7 +26,7 @@ add_filter( 'mailchimp_sync_subscriber_data', function( $data, $user ) {
 
     foreach(Veggie_Challenge::$CHALLENGE_TYPES as $type_key => $type_label):
         if( $challenge_type == $type_key) {
-            $mailchimp_interest_group = get_option('veggie_challenge__mailchimp_interest_'.$type_key.'_id');
+            $mailchimp_interest_group = get_option('veggie_challenge_mailchimp_interest_'.$type_key.'_id');
             $data->interests[ $mailchimp_interest_group ] = true;
         }
         // else do not set interest group to true, thus remove from interest group
