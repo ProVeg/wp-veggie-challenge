@@ -160,7 +160,7 @@ class Veggie_Challenge_Admin
             );
         }
 
-        if ( is_plugin_active( 'mailchimp-for-wp/mailchimp-for-wp.php' ) && is_plugin_active( 'mailchimp-sync' ) ) {
+        if ( is_plugin_active( 'mailchimp-for-wp/mailchimp-for-wp.php' ) && is_plugin_active( 'mailchimp-sync/mailchimp-sync.php' ) ) {
             $this->register_mailchimp_settings();
         } else {
             add_settings_section(
@@ -242,36 +242,17 @@ class Veggie_Challenge_Admin
             $this->plugin_name
         );
 
-        add_settings_field(
-            $this->option_name . '_mailchimp_interest_vegan_id',
-            __('Vegan interest group ID', 'veggie-challenge'),
-            array($this, $this->option_name . '_mailchimp_interest_vegan_id_render'),
-            $this->plugin_name,
-            $this->option_name . '_vc_mailchimp',
-            array('label_for' => $this->option_name . '_mailchimp_interest_vegan_id')
-        );
-
-        add_settings_field(
-            $this->option_name . '_mailchimp_interest_vegetarian_id',
-            __('Vegetarian interest group ID', 'veggie-challenge'),
-            array($this, $this->option_name . '_mailchimp_interest_vegetarian_id_render'),
-            $this->plugin_name,
-            $this->option_name . '_vc_mailchimp',
-            array('label_for' => $this->option_name . '_mailchimp_interest_vegetarian_id')
-        );
-
-        add_settings_field(
-            $this->option_name . '_mailchimp_interest_meatfreedays_id',
-            __('Meat Free Days interest group ID', 'veggie-challenge'),
-            array($this, $this->option_name . '_mailchimp_interest_meatfreedays_id_render'),
-            $this->plugin_name,
-            $this->option_name . '_vc_mailchimp',
-            array('label_for' => $this->option_name . '_mailchimp_interest_meatfreedays_id')
-        );
-
-        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_vegan_id');
-        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_vegetarian_id');
-        register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_meatfreedays_id');
+        foreach (Veggie_Challenge::$CHALLENGE_TYPES as $type_key => $type_label):
+            add_settings_field(
+                $this->option_name . '_mailchimp_interest_'.$type_key.'_id',
+                __($type_label.' interest group ID', 'veggie-challenge'),
+                function() use ($type_key) { $this->veggie_challenge_mailchimp_interest_id_render($type_key); },
+                $this->plugin_name,
+                $this->option_name . '_vc_mailchimp',
+                array('label_for' => $this->option_name . '_mailchimp_interest_'.$type_key.'_id')
+            );
+            register_setting($this->plugin_name, $this->option_name . '_mailchimp_interest_'.$type_key.'_id');
+        endforeach;
     }
 
     /**
@@ -405,36 +386,14 @@ class Veggie_Challenge_Admin
     }
 
     /**
-     * Render the settings input field
+     * Render the mailchimp interest group settings input field
      *
      * @since  1.0.0
      */
-    public function veggie_challenge_mailchimp_interest_vegan_id_render()
+    public function veggie_challenge_mailchimp_interest_id_render($type_key)
     {
-        $form_id = get_option( $this->option_name . '_mailchimp_interest_vegan_id' );
-        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_vegan_id' . '" id="' . $this->option_name . '_mailchimp_interest_vegan_id' . '" value="' . $form_id . '"> ';
-    }
-
-    /**
-     * Render the settings input field
-     *
-     * @since  1.0.0
-     */
-    public function veggie_challenge_mailchimp_interest_vegetarian_id_render()
-    {
-        $form_id = get_option( $this->option_name . '_mailchimp_interest_vegetarian_id' );
-        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_vegetarian_id' . '" id="' . $this->option_name . '_mailchimp_interest_vegetarian_id' . '" value="' . $form_id . '"> ';
-    }
-
-    /**
-     * Render the settings input field
-     *
-     * @since  1.0.0
-     */
-    public function veggie_challenge_mailchimp_interest_meatfreedays_id_render()
-    {
-        $form_id = get_option( $this->option_name . '_mailchimp_interest_meatfreedays_id' );
-        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_meatfreedays_id' . '" id="' . $this->option_name . '_mailchimp_interest_meatfreedays_id' . '" value="' . $form_id . '"> ';
+        $form_id = get_option( $this->option_name . '_mailchimp_interest_'.$type_key.'_id' );
+        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_'.$type_key.'_id' . '" id="' . $this->option_name . '_mailchimp_interest_'.$type_key.'_id' . '" value="' . $form_id . '"> ';
     }
 
 }
