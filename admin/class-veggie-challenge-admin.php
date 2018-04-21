@@ -168,13 +168,43 @@ class Veggie_Challenge_Admin
 
         add_settings_field(
             $this->option_name . '_gravity_forms_form_email_field',
-            __('Email Field', 'veggie-challenge'),
+            __('Email field', 'veggie-challenge'),
             array($this, $this->option_name . '_gravity_forms_form_email_field_render'),
             $this->plugin_name,
             $this->option_name . '_vc_gravity_forms',
             array('label_for' => $this->option_name . '_gravity_forms_form_email_field')
         );
         register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_email_field' );
+
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_challenge_field',
+            __('Challenge type field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_challenge_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_challenge_field')
+        );
+        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_challenge_field' );
+
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_start_date_field',
+            __('Start date field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_start_date_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_start_date_field')
+        );
+        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_start_date_field' );
+
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field',
+            __('Agree Veggie Challenge Emails field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field')
+        );
+        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field' );
         
         add_settings_section(
             $this->option_name . '_vc_mailchimp',
@@ -257,34 +287,64 @@ class Veggie_Challenge_Admin
      */
     public function veggie_challenge_gravity_forms_form_email_field_render()
     {
-        $form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_email_field');
+    }
 
-        if ($form_id == '') {
-            echo __('First select a form above and save changes to select form fields', 'veggie-challenge');
-            return;
+    /**
+     * _Render the form challenge field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_challenge_field_render()
+    {
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_challenge_field');
+    }
+
+    /**
+     * _Render the form challenge field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_start_date_field_render()
+    {
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_start_date_field');
+    }
+
+    /**
+     * _Render the form challenge field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_agree_veggie_challenge_emails_field_render()
+    {
+        echo self::buildFormFieldSelectHtml('_gravity_forms_form_agree_veggie_challenge_emails_field');
+    }
+
+    private function buildFormFieldSelectHtml($option_name) {
+        $current_form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
+        if ($current_form_id == '') {
+            return __('Select a form above and save changes to select form fields', 'veggie-challenge');;
         }
 
-        $form_email_field_id = get_option( $this->option_name . '_gravity_forms_form_email_field' );
+        $current_form_field_id = get_option( $this->option_name . '' . $option_name . '');
+        $form_meta = RGFormsModel::get_form_meta( $current_form_id );
 
-        $select = '<select name="' . $this->option_name . '_gravity_forms_form_email_field' . '" id="' . $this->option_name . '_gravity_forms_form_email_field' . '" >';
-        $form = RGFormsModel::get_form_meta( $form_id );
-
-
+        $select = '<select name="' . $this->option_name . $option_name . '" id="' . $this->option_name . $option_name . '" >';
         $select .= '<option value="" id="0">'.__('Choose field', 'veggie-challenge'). '</option>';
-        foreach( $form as $fields ):
+        foreach( $form_meta as $fields ):
             foreach( $fields as $field ):
-            if ($field->type != '') {
-                $select .= '<option value="'. $field->id . '" id="' . $field->id . '"';
-                if($form_email_field_id == $field->id) $select .= ' selected="selected"';
-                $select .= '>' . $field->label . '</option>';
-            }
+                if ($field->type != '') {
+                    $select .= '<option value="'. $field->id . '" id="' . $field->id . '"';
+                    if($current_form_field_id == $field->id) $select .= ' selected="selected"';
+                    $select .= '>' . $field->label . '</option>';
+                }
             endforeach;
         endforeach;
         $select .= '</select>';
 
-        echo $select;
+        if ($current_form_field_id != '') $select .= ' current id: ' . $current_form_field_id;
 
-        if ($form_email_field_id != '') echo ' current email field id: ' . $form_email_field_id;
+        return $select;
     }
 
     /**
