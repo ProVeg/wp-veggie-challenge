@@ -66,7 +66,7 @@ function set_post_content( $entry, $form ) {
         $form_error->add( 'start_date', __("Start date is required", "veggie_challenge"));
     }
     if (strtotime($start_date) === false) {
-        $form_error->add( 'challenge', __("The supplied start date is not a valid date", "veggie_challenge"));
+        $form_error->add( 'start_date', __("The supplied start date is not a valid date", "veggie_challenge"));
     }
 
     $agree_veggie_challenge_emails = $entry["$agree_veggie_challenge_emails_field_id.1"];
