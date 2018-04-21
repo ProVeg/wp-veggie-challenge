@@ -166,6 +166,16 @@ class Veggie_Challenge_Admin
         );
         register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_id' );
 
+        add_settings_field(
+            $this->option_name . '_gravity_forms_form_email_field',
+            __('Email Field', 'veggie-challenge'),
+            array($this, $this->option_name . '_gravity_forms_form_email_field_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_gravity_forms',
+            array('label_for' => $this->option_name . '_gravity_forms_form_email_field')
+        );
+        register_setting( $this->plugin_name, $this->option_name . '_gravity_forms_form_email_field' );
+        
         add_settings_section(
             $this->option_name . '_vc_mailchimp',
             __('Mailchimp', 'veggie-challenge'),
@@ -217,7 +227,7 @@ class Veggie_Challenge_Admin
     }
 
     /**
-     * _Render the settings input field
+     * _Render the form id settings input field
      *
      * @since  1.0.0
      */
@@ -225,7 +235,7 @@ class Veggie_Challenge_Admin
     {
         $form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
 
-        $select = '<select name="' . $this->option_name . '_gravity_forms_form_id' . '" id="' . $this->option_name . '_gravity_forms_form_id' . '" >';
+        $select = '<select name="' . $this->option_name . '_gravity_forms_form_id' . '" id="' . $this->option_name . '_gravity_forms_form_id' . '">';
         $forms = RGFormsModel::get_forms( null, 'title' );
         $select .= '<option value="" id="0">'.__('Choose form', 'veggie-challenge'). '</option>';
         foreach( $forms as $form ):
@@ -238,6 +248,43 @@ class Veggie_Challenge_Admin
         echo $select;
 
         if ($form_id != '') echo ' current form id: ' . $form_id;
+    }
+
+    /**
+     * _Render the form email field settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_gravity_forms_form_email_field_render()
+    {
+        $form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
+
+        if ($form_id == '') {
+            echo __('First select a form above and save changes to select form fields', 'veggie-challenge');
+            return;
+        }
+
+        $form_email_field_id = get_option( $this->option_name . '_gravity_forms_form_email_field' );
+
+        $select = '<select name="' . $this->option_name . '_gravity_forms_form_email_field' . '" id="' . $this->option_name . '_gravity_forms_form_email_field' . '" >';
+        $form = RGFormsModel::get_form_meta( $form_id );
+
+
+        $select .= '<option value="" id="0">'.__('Choose field', 'veggie-challenge'). '</option>';
+        foreach( $form as $fields ):
+            foreach( $fields as $field ):
+            if ($field->type != '') {
+                $select .= '<option value="'. $field->id . '" id="' . $field->id . '"';
+                if($form_email_field_id == $field->id) $select .= ' selected="selected"';
+                $select .= '>' . $field->label . '</option>';
+            }
+            endforeach;
+        endforeach;
+        $select .= '</select>';
+
+        echo $select;
+
+        if ($form_email_field_id != '') echo ' current email field id: ' . $form_email_field_id;
     }
 
     /**
