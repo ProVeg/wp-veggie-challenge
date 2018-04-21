@@ -160,7 +160,7 @@ class Veggie_Challenge_Admin
             );
         }
 
-        if ( is_plugin_active( 'mailchimp-for-wp/mailchimp-for-wp.php' ) ) {
+        if ( is_plugin_active( 'mailchimp-for-wp/mailchimp-for-wp.php' ) && is_plugin_active( 'mailchimp-sync' ) ) {
             $this->register_mailchimp_settings();
         } else {
             add_settings_section(
@@ -401,7 +401,7 @@ class Veggie_Challenge_Admin
      */
     public function veggie_challenge_mailchimp_not_activated_render()
     {
-        echo '<p>' . __('The plugin \'Mailchimp for Wordpress\' is not installed and/or activated on this website. Visit the plugin page and install \'Mailchimp for Wordpress\' to continue.', 'veggie-challenge') . '</p>';
+        echo '<p>' . __('The plugin \'Mailchimp for Wordpress\' along with add-on \'MailChimp User Sync\' are not installed and/or activated on this website. Visit the plugin page and install \'Mailchimp for Wordpress\' and \'MailChimp User Sync\' to continue.', 'veggie-challenge') . '</p>';
     }
 
     /**
