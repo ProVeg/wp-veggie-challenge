@@ -51,6 +51,15 @@ class Veggie_Challenge_Admin
     private $option_name = 'veggie_challenge';
 
     /**
+     * The retrieved mailchimp interests
+     *
+     * @since    1.0.0
+     * @access    private
+     * @var    string $mailchimp_interests
+     */
+    private $mailchimp_interests = Array();
+
+    /**
      * Initialize the class and set its properties.
      *
      * @since    1.0.0
@@ -371,7 +380,7 @@ class Veggie_Challenge_Admin
      */
     public function veggie_challenge_mailchimp_render()
     {
-        echo '<p>' . __('Enter the Mailchimp interest group IDs.', 'veggie-challenge') . '</p>';
+        echo '<p>' . __('Enter the interest group IDs of Mailchimp that are linked to the veggie challenge campaign.', 'veggie-challenge') . '</p>';
     }
 
 
@@ -390,10 +399,52 @@ class Veggie_Challenge_Admin
      *
      * @since  1.0.0
      */
-    public function veggie_challenge_mailchimp_interest_id_render($type_key)
+    public function veggie_challenge_mailchimp_interest_id_render($interest_id)
     {
-        $form_id = get_option( $this->option_name . '_mailchimp_interest_'.$type_key.'_id' );
-        echo '<input type="text" name="' . $this->option_name . '_mailchimp_interest_'.$type_key.'_id' . '" id="' . $this->option_name . '_mailchimp_interest_'.$type_key.'_id' . '" value="' . $form_id . '"> ';
+        $current_interest = get_option( $this->option_name . '_mailchimp_interest_'.$interest_id.'_id' );
+
+        $interests = self::buildMailchimpInterestsArray();
+        if($interests != null) {
+            $output = '<select name="' . $this->option_name . '_mailchimp_interest_'.$interest_id.'_id' . '" id="' . $this->option_name . '_mailchimp_interest_'.$interest_id.'_id' . '" >';
+            $output .= '<option value="" id="0">'.__('Choose interest group', 'veggie-challenge'). '</option>';
+            foreach ($interests as $interest_id => $interest_label):
+                if ($interest_id != '') {
+                    $output .= '<option value="'. $interest_id . '" id="' . $interest_id . '"';
+                    if($current_interest == $interest_id) $output .= ' selected="selected"';
+                    $output .= '>' . $interest_label . '</option>';
+                }
+
+            endforeach;
+            $output .= '</select>';
+
+            if ($current_interest != '') $output .= ' current id: ' . $current_interest;
+
+            echo $output;
+        } else {
+            echo 'Could not retrieve mailchimp lists. Please <a href="'. get_admin_url(). 'admin.php?page=mailchimp-for-wp' . '">connect</a> Mailchimp for WP. ';
+        }
+    }
+
+    private function buildMailchimpInterestsArray() {
+
+        try {
+            if (empty($this->mailchimp_interests)) {
+            $lists = mc4wp('api')->get_lists(array('fields' => 'lists.id,lists.name'));
+            foreach ($lists as $list):
+                $categories = mc4wp('api')->get_list_interest_categories($list->id);
+                foreach ($categories as $category):
+                    $interests = mc4wp('api')->get_list_interest_category_interests($list->id, $category->id);
+                    foreach ($interests as $interest):
+                        $this->mailchimp_interests[$interest->id] = $list->name . '>' . $category->title . '>' . $interest->name;
+                    endforeach;
+                endforeach;
+            endforeach;
+            }
+        } catch (Exception $e) {
+            echo 'Error: ',  $e->getMessage(), ". ";
+        }
+
+        return $this->mailchimp_interests;
     }
 
 }
