@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       VeggieChallenge
  * Plugin URI:        http://proveg.com
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       This plugin adds a Gravity forms hook to start a MailChimp campaign at a specific date
  * Version:           1.0.0
  * Author:            ProVeg
  * Author URI:        http://proveg.com

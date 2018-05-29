@@ -40,9 +40,9 @@ function set_post_content( $entry, $form ) {
         $form_error->add( 'start_date_field_id', __("Start Date Field Id not set.$please_configure", "veggie_challenge"));
     }
 
-    $veggie_challenge_role_id = get_role('veggiechallenge');
+    $veggie_challenge_role_id = get_role('veggiechallenge-subscriber');
     if (!($veggie_challenge_role_id > 0)) {
-        $form_error->add( 'veggie_challenge_role_id', __("VeggieChallenge role does not exist. Please reinstall the plugin.", "veggie_challenge"));
+        $form_error->add( 'veggie_challenge_role_id', __("VeggieChallenge User role does not exist. Please reinstall the plugin.", "veggie_challenge"));
     }
     
     $email_address = $entry[$email_address_field_id];
@@ -92,7 +92,7 @@ function set_post_content( $entry, $form ) {
         if (!$user_id && email_exists( $email_address ) == false ) {
             $random_password = wp_generate_password( $length=16, $include_standard_special_chars=false );
             $user_id = wp_create_user( $email_address, $random_password, $email_address );
-            wp_update_user( array( 'ID' => $user_id, 'role' => 'veggiechallenge' ) );
+            wp_update_user( array( 'ID' => $user_id, 'role' => 'veggiechallenge-subscriber' ) );
         }
     
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, '1');

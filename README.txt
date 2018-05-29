@@ -18,3 +18,38 @@ This plugin adds a Gravity forms hook to start a MailChimp campaign at a specifi
 
 1. Upload `veggie-challenge` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
+
+== Set up ==
+
+1. Install the following plugins:
+  a. gravityforms (https://www.gravityforms.com/),
+  b. mailchimp-for-wp (https://wordpress.org/plugins/mailchimp-for-wp/)
+  c. mailchimp-sync (https://wordpress.org/plugins/mailchimp-sync/)
+
+2. Create a gravity form with the following fields
+  a. Email text input
+  b. Challenge type select list (with values: vegan, vegetarian, meat_free_days)
+  c. Start date input
+  d. Agreement checkbox
+
+3. Set up your MailChimp account
+  a. Create a list that will contain the VeggieChallenge participants
+  b. Add an interest group to the list with options Vegan, Vegetarian and Meat Free Days
+  c. create an MailChimp API key at Account -> Profile -> Extras -> API Keys
+
+4. Connect Wordpress to Mailchimp
+  a. Visit the MailChimp for WP settings page
+  b. Ender your MailChimp API key and save changes
+  c. Make sure you are connected
+
+5. Set up the VeggieChallenge plugin
+  a. Visit the VeggieChallenge settings page (Settings -> VeggieChallenge)
+  b. Choose the form that you have created and save changes
+  c. Link the correct form fields
+  d. Link the correct MailChimp interest groups
+
+6. Sync users
+  a. Visit the Synchronization page (MailChimp for WP -> User sync)
+  b. Select the list that should be synced
+  c. Select 'VeggieChallenge subscriber' as role to sync
+  c. Run a manual synchronization or set up a cron job to execute the following WP CLI command: wp mailchimp-sync sync-all
