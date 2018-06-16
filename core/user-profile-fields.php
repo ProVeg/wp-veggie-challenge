@@ -4,7 +4,12 @@
 add_action( 'show_user_profile', '_vc_show_challenge_profile_fields' );
 add_action( 'edit_user_profile', '_vc_show_challenge_profile_fields' );
 
-function _vc_show_challenge_profile_fields( $user ) { ?>
+function _vc_show_challenge_profile_fields( $user ) {
+
+    if ($user->caps[Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE] != 1) {
+        return;
+    }
+    ?>
 
     <h3><?php echo __("VeggieChallenge Fields", 'veggie-challenge') ?></h3>
 
