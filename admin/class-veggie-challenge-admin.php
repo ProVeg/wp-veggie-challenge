@@ -158,6 +158,8 @@ class Veggie_Challenge_Admin
      */
     public function register_setting()
     {
+        $this->register_general_settings();
+
         if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
             $this->register_gravity_forms_settings();
         } else {
@@ -180,6 +182,26 @@ class Veggie_Challenge_Admin
             );
         }
 
+    }
+
+    private function register_general_settings()
+    {
+        add_settings_section(
+            $this->option_name . '_vc_general',
+            __('General', 'veggie-challenge'),
+            array($this, $this->option_name . '_general_render'),
+            $this->plugin_name
+        );
+
+        add_settings_field(
+            $this->option_name . '_general_count',
+            __('Number of users that have started the challenge', 'veggie-challenge'),
+            array($this, $this->option_name . '_general_count_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_general',
+            array('label_for' => $this->option_name . '_general_count')
+        );
+        register_setting($this->plugin_name, $this->option_name . '_general_count');
     }
 
     private function register_gravity_forms_settings()
@@ -275,13 +297,35 @@ class Veggie_Challenge_Admin
     }
 
     /**
+     * Render the text for the general section
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_general_render()
+    {
+        echo '<p>' . __('Set the general Veggie Challenge settings.', 'veggie-challenge') . '</p>';
+    }
+
+
+    /**
+     * _Render the base count setting input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_general_count_render()
+    {
+        $base_count = get_option( $this->option_name . '_general_count' );
+        echo '<input type="number" name="' . $this->option_name . '_general_count' . '" id="' . $this->option_name . '_general_count' . '" value="'. $base_count .'"/>';
+    }
+
+    /**
      * Render the text for the gravity forms section
      *
      * @since  1.0.0
      */
     public function veggie_challenge_gravity_forms_render()
     {
-        echo '<p>' . __('Enter the Gravity Forms form ID of the Veggie Challenge.', 'veggie-challenge') . '</p>';
+        echo '<p>' . __('Set the Gravity Forms form of the Veggie Challenge.', 'veggie-challenge') . '</p>';
     }
 
     /**

@@ -25,8 +25,9 @@ function veggie_challenge_mailchimp_sync_should_sync_user( $subscribe, $user ) {
     if (strtotime($start_date) > time()) {
         return false;
     }
-    
-    //update_user_meta( $user->ID, Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP, '1');
+
+    update_user_meta( $user->ID, Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP, '1');
+    update_option('veggie_challenge_general_count', intval(get_option('veggie_challenge_general_count')) + 1);
 
     return true;
 };
