@@ -126,6 +126,7 @@ function _vc_save_challenge_profile_fields( $user_id ) {
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $_POST[Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $_POST[Veggie_Challenge::$USER_FIELD_START_DATE] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, $_POST[Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS] );
+    update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP, $_POST[Veggie_Challenge::$USER_FIELD_IS_SYNCED_TO_MAILCHIMP] );
 
     $form = GFAPI::get_form(intval(get_option('veggie_challenge_gravity_forms_form_id')));
     foreach ($form['fields'] as $field) {
