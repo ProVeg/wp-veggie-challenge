@@ -102,11 +102,20 @@ function set_post_content( $entry, $form ) {
             $user_id = wp_create_user( $email_address, $random_password, $email_address );
             wp_update_user( array( 'ID' => $user_id, 'role' => 'veggiechallenge-subscriber' ) );
         }
-    
+
+        // store required veggie challenge fields
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, '1');
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $challenge);
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $start_date);
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, '1');
+
+        // save extra custom user meta fields
+        foreach ($form['fields'] as $field) {
+            if ($field['adminLabel'] != '') {
+                $user_meta_field_key = 'veggie_challenge_' . $field['adminLabel'];
+                update_user_meta( $user_id, $user_meta_field_key, $entry[$field['id']]);
+            }
+        }
     }
 }
 add_action( 'gform_after_submission', 'set_post_content', 10, 2 );

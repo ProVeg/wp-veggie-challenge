@@ -107,6 +107,25 @@ function _vc_show_challenge_profile_fields( $user ) { ?>
             </td>
         </tr>
 
+        <?php
+        $form = GFAPI::get_form(intval(get_option('veggie_challenge_gravity_forms_form_id')));
+
+        foreach ($form['fields'] as $field) {
+
+            if ($field['adminLabel'] != '') {
+                $user_meta_field_key = 'veggie_challenge_' . $field['adminLabel'];
+                ?>
+                <tr>
+                    <th><label><?php echo $field['label']; ?> (<?php echo $user_meta_field_key; ?>)</label></th>
+                    <td>
+                        <input type="text" name="<?php echo $user_meta_field_key; ?>" id="<?php echo $user_meta_field_key; ?>" value="<?php echo esc_attr(get_the_author_meta($user_meta_field_key, $user->ID)); ?>" class="text-input"/>
+                    </td>
+                </tr>
+                <?php
+            }
+        }
+
+        ?>
     </table>
 <?php }
 
