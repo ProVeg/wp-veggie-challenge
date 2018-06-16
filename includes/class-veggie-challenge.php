@@ -32,7 +32,6 @@ class Veggie_Challenge {
     static $VEGGIE_CHALLENGE_SUBSCRIBER_ROLE = 'veggiechallenge-subscriber';
 
     static $USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE = 'veggie_challenge_participates_in_veggiechallenge';
-    static $USER_FIELD_CURRENT_DIET = 'veggie_challenge_current_diet';
     static $USER_FIELD_CHALLENGE_TYPE = 'veggie_challenge_challenge_type';
     static $USER_FIELD_START_DATE = 'veggie_challenge_start_date';
     static $USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS = 'veggie_challenge_agree_veggie_challenge_emails';

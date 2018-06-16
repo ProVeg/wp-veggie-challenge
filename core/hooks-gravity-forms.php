@@ -53,14 +53,6 @@ function set_post_content( $entry, $form ) {
         $form_error->add( 'email_address', __("The supplied email address is not valid", "veggie_challenge"));
     }
 
-    // $current_diet = $entry[$current_diet_field_id];
-    // if (!$current_diet) {
-    //     $form_error->add( 'challenge', __("Current diet is required", "veggie_challenge"));
-    // }
-    // if (!in_array($current_diet, array_keys(Veggie_Challenge::$CHALLENGE_TYPES))) {
-    //     $form_error->add( 'challenge', __("The supplied diet is not a valid diet. Valid challenges are: ", "veggie_challenge") . implode(", ", array_keys(Veggie_Challenge::$CHALLENGE_TYPES)));
-    // }
-
     $challenge = $entry[$challenge_field_id];
     if (!$challenge) {
         $form_error->add( 'challenge', __("Desired challenge is required", "veggie_challenge"));

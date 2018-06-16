@@ -31,27 +31,6 @@ function _vc_show_challenge_profile_fields( $user ) {
         </tr>
 
         <tr>
-            <th><label for="<?php echo Veggie_Challenge::$USER_FIELD_CURRENT_DIET; ?>"><?php echo __("Current diet", 'veggie-challenge') ?></label></th>
-
-            <?php
-            $selected = esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $user->ID ) );
-            ?>
-            <td>
-                <select name="<?php echo Veggie_Challenge::$USER_FIELD_CURRENT_DIET; ?>" id="<?php echo Veggie_Challenge::$USER_FIELD_CURRENT_DIET; ?>">
-                    <option value=""></option>
-                    <?php
-                    foreach (Veggie_Challenge::$DIET_TYPES as $key => $label):
-                        echo '<option value="'.$key.'"';
-                        if ($selected == $key ) { echo 'selected="selected"'; }
-                        echo '>'.__($label, 'veggie-challenge').'</option>';
-                    endforeach;
-                    ?>
-                </select>
-                Saved key: <?php echo esc_attr( get_the_author_meta( Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $user->ID ) ); ?>
-            </td>
-        </tr>
-
-        <tr>
             <th><label for="<?php echo Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE; ?>"><?php echo __("Challenge type", 'veggie-challenge') ?></label></th>
 
             <?php
@@ -143,7 +122,6 @@ function _vc_save_challenge_profile_fields( $user_id ) {
         return false;
 
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, $_POST[Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE] );
-    update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CURRENT_DIET, $_POST[Veggie_Challenge::$USER_FIELD_CURRENT_DIET] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $_POST[Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $_POST[Veggie_Challenge::$USER_FIELD_START_DATE] );
     update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, $_POST[Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS] );
