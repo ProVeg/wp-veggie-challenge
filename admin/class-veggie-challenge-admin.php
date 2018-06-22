@@ -240,6 +240,16 @@ class Veggie_Challenge_Admin
             array('label_for' => $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field')
         );
         register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_agree_veggie_challenge_emails_field');
+
+        // add_settings_field(
+        //     $this->option_name . '_gravity_forms_form_optional_fields_field_render',
+        //     __('Optional fields', 'veggie-challenge'),
+        //     array($this, $this->option_name . '_gravity_forms_form_optional_fields_field_render'),
+        //     $this->plugin_name,
+        //     $this->option_name . '_vc_gravity_forms',
+        //     array('label_for' => $this->option_name . '_gravity_forms_form_optional_fields_field_render')
+        // );
+        // register_setting($this->plugin_name, $this->option_name . '_gravity_forms_form_optional_fields_field_render');
     }
 
     private function register_mailchimp_settings()
@@ -347,6 +357,17 @@ class Veggie_Challenge_Admin
     {
         echo self::buildFormFieldSelectHtml('_gravity_forms_form_agree_veggie_challenge_emails_field');
     }
+
+    /**
+     * _Render the form challenge field settings input field
+     *
+     * @since  1.0.0
+     */
+    // public function veggie_challenge_gravity_forms_form_optional_fields_field_render()
+    // {
+    //     $current_form_field_id = get_option( $this->option_name . '' . $option_name . '');
+    //     echo '<textarea name="' . $this->option_name . '_gravity_forms_form_optional_fields_field"></textarea>';
+    // }
 
     private function buildFormFieldSelectHtml($option_name) {
         $current_form_id = get_option( $this->option_name . '_gravity_forms_form_id' );
