@@ -158,6 +158,8 @@ class Veggie_Challenge_Admin
      */
     public function register_setting()
     {
+        $this->register_general_settings();
+
         if ( is_plugin_active( 'gravityforms/gravityforms.php' ) ) {
             $this->register_gravity_forms_settings();
         } else {
@@ -182,6 +184,26 @@ class Veggie_Challenge_Admin
 
     }
 
+    private function register_general_settings()
+    {
+        add_settings_section(
+            $this->option_name . '_vc_general',
+            __('General', 'veggie-challenge'),
+            array($this, $this->option_name . '_general_render'),
+            $this->plugin_name
+        );
+
+        add_settings_field(
+            $this->option_name . '_general_count',
+            __('Number of users that have started the challenge', 'veggie-challenge'),
+            array($this, $this->option_name . '_general_count_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_general',
+            array('label_for' => $this->option_name . '_general_count')
+        );
+        register_setting($this->plugin_name, $this->option_name . '_general_count');
+    }
+
     private function register_gravity_forms_settings()
     {
         add_settings_section(
@@ -193,7 +215,7 @@ class Veggie_Challenge_Admin
 
         add_settings_field(
             $this->option_name . '_gravity_forms_form_id',
-            __('Gravity Form ID', 'veggie-challenge'),
+            __('Gravity Form', 'veggie-challenge'),
             array($this, $this->option_name . '_gravity_forms_form_id_render'),
             $this->plugin_name,
             $this->option_name . '_vc_gravity_forms',
@@ -261,10 +283,20 @@ class Veggie_Challenge_Admin
             $this->plugin_name
         );
 
+        add_settings_field(
+            $this->option_name . '_mailchimp_list_id',
+            __('Mailchimp List', 'veggie-challenge'),
+            array($this, $this->option_name . '_mailchimp_list_setting_render'),
+            $this->plugin_name,
+            $this->option_name . '_vc_mailchimp',
+            array('label_for' => $this->option_name . '_mailchimp_list_id')
+        );
+        register_setting($this->plugin_name, $this->option_name . '_mailchimp_list_id');
+
         foreach (Veggie_Challenge::$CHALLENGE_TYPES as $type_key => $type_label):
             add_settings_field(
                 $this->option_name . '_mailchimp_interest_'.$type_key.'_id',
-                __($type_label.' interest group ID', 'veggie-challenge'),
+                __($type_label.' interest group', 'veggie-challenge'),
                 function() use ($type_key) { $this->veggie_challenge_mailchimp_interest_id_render($type_key); },
                 $this->plugin_name,
                 $this->option_name . '_vc_mailchimp',
@@ -275,13 +307,35 @@ class Veggie_Challenge_Admin
     }
 
     /**
+     * Render the text for the general section
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_general_render()
+    {
+        echo '<p>' . __('Set the general Veggie Challenge settings.', 'veggie-challenge') . '</p>';
+    }
+
+
+    /**
+     * _Render the base count setting input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_general_count_render()
+    {
+        $base_count = get_option( $this->option_name . '_general_count' );
+        echo '<input type="number" name="' . $this->option_name . '_general_count' . '" id="' . $this->option_name . '_general_count' . '" value="'. $base_count .'"/>';
+    }
+
+    /**
      * Render the text for the gravity forms section
      *
      * @since  1.0.0
      */
     public function veggie_challenge_gravity_forms_render()
     {
-        echo '<p>' . __('Enter the Gravity Forms form ID of the Veggie Challenge.', 'veggie-challenge') . '</p>';
+        echo '<p>' . __('Set the Gravity Forms form of the Veggie Challenge.', 'veggie-challenge') . '</p>';
     }
 
     /**
@@ -401,7 +455,7 @@ class Veggie_Challenge_Admin
      */
     public function veggie_challenge_mailchimp_render()
     {
-        echo '<p>' . __('Enter the interest group IDs of Mailchimp that are linked to the veggie challenge campaign.', 'veggie-challenge') . '</p>';
+        echo '<p>' . __('Set the interest groups of Mailchimp that are linked to the veggie challenge campaign.', 'veggie-challenge') . '</p>';
     }
 
 
@@ -416,15 +470,46 @@ class Veggie_Challenge_Admin
     }
 
     /**
+     * _Render the mailchimp list settings input field
+     *
+     * @since  1.0.0
+     */
+    public function veggie_challenge_mailchimp_list_setting_render()
+    {
+        $list_id = get_option( $this->option_name . '_mailchimp_list_id' );
+
+        $select = '<select name="' . $this->option_name . '_mailchimp_list_id' . '" id="' . $this->option_name . '_mailchimp_list_id' . '">';
+        $lists = mc4wp('api')->get_lists(array('fields' => 'lists.id,lists.name'));
+
+        $select .= '<option value="" id="0">'.__('Choose list', 'veggie-challenge'). '</option>';
+        foreach( $lists as $list ):
+            $select .= '<option value="'. $list->id . '" id="' . $list->id . '"';
+            if($list_id == $list->id) $select .= ' selected="selected"';
+            $select .= '>' . $list->name . '</option>';
+        endforeach;
+        $select .= '</select>';
+
+        echo $select;
+
+        if ($list_id != '') echo ' current list id: ' . $list_id;
+    }
+
+    /**
      * Render the mailchimp interest group settings input field
      *
      * @since  1.0.0
      */
     public function veggie_challenge_mailchimp_interest_id_render($interest_id)
     {
+        $current_list_id = get_option( $this->option_name . '_mailchimp_list_id' );
+        if ($current_list_id == '') {
+            echo __('Select a list above and save changes to select interest groups', 'veggie-challenge');
+            return;
+        }
+
         $current_interest = get_option( $this->option_name . '_mailchimp_interest_'.$interest_id.'_id' );
 
-        $interests = self::buildMailchimpInterestsArray();
+        $interests = self::buildMailchimpInterestsArray($current_list_id);
         if($interests != null) {
             $output = '<select name="' . $this->option_name . '_mailchimp_interest_'.$interest_id.'_id' . '" id="' . $this->option_name . '_mailchimp_interest_'.$interest_id.'_id' . '" >';
             $output .= '<option value="" id="0">'.__('Choose interest group', 'veggie-challenge'). '</option>';
@@ -446,19 +531,15 @@ class Veggie_Challenge_Admin
         }
     }
 
-    private function buildMailchimpInterestsArray() {
-
+    private function buildMailchimpInterestsArray($current_list_id) {
         try {
             if (empty($this->mailchimp_interests)) {
-            $lists = mc4wp('api')->get_lists(array('fields' => 'lists.id,lists.name'));
-            foreach ($lists as $list):
-                $categories = mc4wp('api')->get_list_interest_categories($list->id);
+                $categories = mc4wp('api')->get_list_interest_categories($current_list_id);
                 foreach ($categories as $category):
-                    $interests = mc4wp('api')->get_list_interest_category_interests($list->id, $category->id);
+                    $interests = mc4wp('api')->get_list_interest_category_interests($current_list_id, $category->id);
                     foreach ($interests as $interest):
-                        $this->mailchimp_interests[$interest->id] = $list->name . '>' . $category->title . '>' . $interest->name;
+                        $this->mailchimp_interests[$interest->id] = $category->title . '>' . $interest->name;
                     endforeach;
-                endforeach;
             endforeach;
             }
         } catch (Exception $e) {

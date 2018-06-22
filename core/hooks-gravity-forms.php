@@ -40,7 +40,7 @@ function set_post_content( $entry, $form ) {
         $form_error->add( 'start_date_field_id', __("Start Date Field Id not set.$please_configure", "veggie_challenge"));
     }
 
-    $veggie_challenge_role_id = get_role('veggiechallenge-subscriber');
+    $veggie_challenge_role_id = get_role(Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE);
     if (!($veggie_challenge_role_id > 0)) {
         $form_error->add( 'veggie_challenge_role_id', __("VeggieChallenge User role does not exist. Please reinstall the plugin.", "veggie_challenge"));
     }
@@ -92,13 +92,22 @@ function set_post_content( $entry, $form ) {
         if (!$user_id && email_exists( $email_address ) == false ) {
             $random_password = wp_generate_password( $length=16, $include_standard_special_chars=false );
             $user_id = wp_create_user( $email_address, $random_password, $email_address );
-            wp_update_user( array( 'ID' => $user_id, 'role' => 'veggiechallenge-subscriber' ) );
+            wp_update_user( array( 'ID' => $user_id, 'role' => Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE ) );
         }
-    
+
+        // store required veggie challenge fields
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_PARTICIPATES_IN_VEGGIE_CHALLENGE, '1');
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_CHALLENGE_TYPE, $challenge);
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $start_date);
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, '1');
+
+        // save extra custom user meta fields
+        foreach ($form['fields'] as $field) {
+            if ($field['adminLabel'] != '') {
+                $user_meta_field_key = 'veggie_challenge_' . $field['adminLabel'];
+                update_user_meta( $user_id, $user_meta_field_key, $entry[$field['id']]);
+            }
+        }
     }
 }
 add_action( 'gform_after_submission', 'set_post_content', 10, 2 );

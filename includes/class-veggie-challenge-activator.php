@@ -30,7 +30,7 @@ class Veggie_Challenge_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-		add_role( 'veggiechallenge-subscriber', __('VeggieChallenge subscriber'), array() );
+		add_role( Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE, __('VeggieChallenge subscriber'), array() );
 	}
 
 }

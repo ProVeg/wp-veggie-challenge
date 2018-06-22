@@ -53,3 +53,10 @@ This plugin adds a Gravity forms hook to start a MailChimp campaign at a specifi
   b. Select the list that should be synced
   c. Select 'VeggieChallenge subscriber' as role to sync
   c. Run a manual synchronization or set up a cron job to execute the following WP CLI command: wp mailchimp-sync sync-all
+
+== Extra: Sync extra user meta ==
+
+1. Create a form field in the gravity form and set an 'admin field label' for that field in the 'Advanced' tab.
+2. Check the users profile page to see if the extra user meta is visible and take note of the field key.
+3. Add a mapping from field key to Mailchimp merge field in the 'MailChimp for WP -> User sync' page.
+Note: if you are using dropdowns, make sure the option labels match the option labels in Mailchimp.
