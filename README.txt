@@ -52,7 +52,11 @@ This plugin adds a Gravity forms hook to start a MailChimp campaign at a specifi
   a. Visit the Synchronization page (MailChimp for WP -> User sync)
   b. Select the list that should be synced
   c. Select 'VeggieChallenge subscriber' as role to sync
-  c. Run a manual synchronization or set up a cron job to execute the following WP CLI command: wp mailchimp-sync sync-all
+  d. Run a manual synchronization to test your configuration
+  e. Set up a cron job with crontab:
+	- when you have WP CLI installed, execute the following WP CLI command: wp mailchimp-sync sync-all
+    - there is an hourly cron job added when activating the plugin (you can execute cron jobs by calling: wget -q -O - http://<yourdomain.com>/wp-cron.php?doing_wp_cron)
+  
 
 == Extra: Sync extra user meta ==
 
