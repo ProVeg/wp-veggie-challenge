@@ -85,5 +85,6 @@ require 'core/hooks-gravity-forms.php';
 require 'core/hooks-mailchimp-sync.php';
 require 'core/user-profile-fields.php';
 require 'core/short-code-count.php';
+require 'core/cronjobs.php';
 
 ?>

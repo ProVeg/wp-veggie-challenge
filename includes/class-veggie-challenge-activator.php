@@ -31,6 +31,8 @@ class Veggie_Challenge_Activator {
 	 */
 	public static function activate() {
 		add_role( Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE, __('VeggieChallenge subscriber'), array() );
+
+		wp_schedule_event( time(), 'hourly', 'veggie_challenge_sync_users_event' );
 	}
 
 }
