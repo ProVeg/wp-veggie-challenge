@@ -93,6 +93,10 @@ function set_post_content( $entry, $form ) {
             $random_password = wp_generate_password( $length=16, $include_standard_special_chars=false );
             $user_id = wp_create_user( $email_address, $random_password, $email_address );
             wp_update_user( array( 'ID' => $user_id, 'role' => Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE ) );
+        } else {
+            // else add role to existing user
+            $user = new WP_User($user_id);
+            $user->add_role(Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE);
         }
 
         // store required veggie challenge fields
