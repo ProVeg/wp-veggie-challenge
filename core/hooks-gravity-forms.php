@@ -101,13 +101,23 @@ function set_post_content( $entry, $form ) {
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_START_DATE, $start_date);
         update_user_meta( $user_id, Veggie_Challenge::$USER_FIELD_AGREE_VEGGIE_CHALLENGE_EMAILS, '1');
 
+
+
         // save extra custom user meta fields
         foreach ($form['fields'] as $field) {
             if ($field['adminLabel'] != '') {
                 $user_meta_field_key = 'veggie_challenge_' . $field['adminLabel'];
-                update_user_meta( $user_id, $user_meta_field_key, $entry[$field['id']]);
+
+                if($field['type'] == 'checkbox') {
+                    $value = $field->get_value_export( $entry, $field->id, true );
+                } else {
+                    $value = $entry[$field['id']];
+                }
+
+                update_user_meta( $user_id, $user_meta_field_key, $value);
             }
         }
+
     }
 }
 add_action( 'gform_after_submission', 'set_post_content', 10, 2 );
