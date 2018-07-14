@@ -9,6 +9,7 @@
   * @param array  $form     Contains information about the form
  */
 function set_post_content( $entry, $form ) {
+
     $form_error = new WP_Error();
 
     $please_configure = ". Please configure on the VeggieChallenge settings page.";
@@ -85,18 +86,29 @@ function set_post_content( $entry, $form ) {
 
     if (count($form_error->get_error_messages()) === 0) {
 
-        // check if the user exists
-        $user_id = username_exists( $email_address );
-    
+        // check if the email address exists
+        $user_id = email_exists( $email_address );
+
         // if the user does not exist, create it
-        if (!$user_id && email_exists( $email_address ) == false ) {
+        if (!$user_id) {
             $random_password = wp_generate_password( $length=16, $include_standard_special_chars=false );
-            $user_id = wp_create_user( $email_address, $random_password, $email_address );
+            $username = "vc_" . substr(time(), 0, 5) . "_" . $email_address;
+            $user_id = wp_create_user( $username, $random_password, $email_address );
             wp_update_user( array( 'ID' => $user_id, 'role' => Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE ) );
         } else {
+
             // else add role to existing user
             $user = new WP_User($user_id);
-            $user->add_role(Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE);
+
+            $user_meta=get_userdata($user_id);
+            $user_roles=$user_meta->roles;
+            if(!in_array(Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE, $user_roles)) {
+                // Add role as first role for Mailchimp for WP plugin to see it.
+                $user->set_role(Veggie_Challenge::$VEGGIE_CHALLENGE_SUBSCRIBER_ROLE);
+                foreach($user_roles as $role) {
+                    $user->add_role($role);
+                }
+            }
         }
 
         // store required veggie challenge fields
